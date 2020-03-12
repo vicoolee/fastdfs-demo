@@ -3,6 +3,7 @@ package com.glodon.fastdfs.utils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -21,11 +22,16 @@ import com.github.tobato.fastdfs.domain.conn.FdfsWebServer;
 import com.github.tobato.fastdfs.domain.fdfs.MetaData;
 import com.github.tobato.fastdfs.domain.fdfs.StorePath;
 import com.github.tobato.fastdfs.domain.proto.storage.DownloadByteArray;
+import com.github.tobato.fastdfs.domain.upload.FastImageFile;
 import com.github.tobato.fastdfs.exception.FdfsUnsupportStorePathException;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 
 import lombok.extern.slf4j.Slf4j;
-
+/**
+ * 
+ * @author liwk
+ * @desc fdfs 上传下载工具类
+ */
 @Component
 @Slf4j
 public class FdfsUtil {
@@ -71,10 +77,28 @@ public class FdfsUtil {
 	 * @return
 	 */
 	public String uploadFileStream(InputStream is, long size, String fileName) {
-		StorePath path = storageClient.uploadFile(is, size, fileName, null);
+		StorePath path = storageClient.uploadFile(is, size, fileName, createMetaData());
 		return getResAccessUrl(path);
 	}
 
+	/**
+	 * 上传图片，按默认方式生成缩略图
+	 * @throws IOException 
+	 */
+	
+	public String uploadImage(MultipartFile file) throws IOException {
+		String fileExtName = FilenameUtils.getExtension(file.getOriginalFilename());
+
+		FastImageFile fastImageFile =  new FastImageFile.Builder()
+                .withThumbImage()
+                .withFile(file.getInputStream(), file.getSize(), fileExtName)
+                .withMetaData(createMetaData())
+                .build();
+		StorePath path = storageClient.uploadImage(fastImageFile);
+		return getResAccessUrl(path);
+	}
+	
+	
 	/**
 	 * 将一段文本文件写到fastdfs的服务器上
 	 *
@@ -140,7 +164,7 @@ public class FdfsUtil {
 	
 	private Set<MetaData> createMetaData() {
         Set<MetaData> metaDataSet = new HashSet<MetaData>();
-        metaDataSet.add(new MetaData("Author", "liwk"));
+        metaDataSet.add(new MetaData("Author", "liwk-b"));
         metaDataSet.add(new MetaData("CreateDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
         return metaDataSet;
     }

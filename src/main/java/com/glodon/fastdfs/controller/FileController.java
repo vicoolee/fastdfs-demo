@@ -61,6 +61,21 @@ public class FileController {
 		
 		return ResponseEntity.ok(fileUrls);
 	}
+	/**
+	 * 上传文件并根据yml配置 生成缩略图
+	 * 返回示例： group1/M00/00/00/wKh8gF5pz96ANbTSAR94D33_3oE643.jpg  另服务器还存有 缩略图文件 wKh8gF5pz96ANbTSAR94D33_3oE643_200x200.jpg
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/uploadImage")
+	public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws Exception {
+		if(file.isEmpty()) {
+			return ResponseEntity.badRequest().body("文件不能为空！");
+		}
+		String fileUrl = fdfsUtil.uploadImage(file);
+		return ResponseEntity.ok(fileUrl);
+	}
 	
 	/**
 	 * 删除文件

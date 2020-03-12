@@ -21,7 +21,7 @@ fdfs:
   connect-timeout: 1601      #读取超时时间
   webServerUrl: http://192.168.124.128:8888/
   thumb-image:             #缩略图生成参数
-    width: 150
-    height: 150
+    width: 200
+    height: 200
   tracker-list:            #TrackerList参数,支持多个
     - 192.168.124.128:22122
