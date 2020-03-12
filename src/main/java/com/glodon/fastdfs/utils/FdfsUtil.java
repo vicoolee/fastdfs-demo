@@ -88,16 +88,20 @@ public class FdfsUtil {
 	
 	public String uploadImage(MultipartFile file) throws IOException {
 		String fileExtName = FilenameUtils.getExtension(file.getOriginalFilename());
-
-		FastImageFile fastImageFile =  new FastImageFile.Builder()
-                .withThumbImage()
-                .withFile(file.getInputStream(), file.getSize(), fileExtName)
-                .withMetaData(createMetaData())
-                .build();
-		StorePath path = storageClient.uploadImage(fastImageFile);
+		return uploadImage(file.getInputStream(),file.getSize(),fileExtName,createMetaData());
+	}
+	/**
+	 * 上传图片，按默认方式生成缩略图
+	 * @param is
+	 * @param size
+	 * @param fileExtName
+	 * @param metaData
+	 * @return
+	 */
+	public String uploadImage(InputStream is, long size, String fileExtName, Set<MetaData> metaData) {
+		StorePath path = storageClient.uploadImageAndCrtThumbImage(is, size, fileExtName, metaData);
 		return getResAccessUrl(path);
 	}
-	
 	
 	/**
 	 * 将一段文本文件写到fastdfs的服务器上
@@ -123,7 +127,10 @@ public class FdfsUtil {
 		String fileUrl = storePath.getFullPath();
 		return fileUrl;
 	}
-	
+	/**
+	 * 获取文件服务器访问地址
+	 * @return
+	 */
 	public String getWebServerUrl() {
 		return fdfsWebServer.getWebServerUrl() ;
 	}
@@ -157,11 +164,11 @@ public class FdfsUtil {
 	}
 	
 	
-	public String uploadImage(InputStream is, long size, String fileExtName, Set<MetaData> metaData) {
-		StorePath path = storageClient.uploadImageAndCrtThumbImage(is, size, fileExtName, metaData);
-		return getResAccessUrl(path);
-	}
 	
+	/**
+	 * 元数据 构造
+	 * @return
+	 */
 	private Set<MetaData> createMetaData() {
         Set<MetaData> metaDataSet = new HashSet<MetaData>();
         metaDataSet.add(new MetaData("Author", "liwk-b"));
