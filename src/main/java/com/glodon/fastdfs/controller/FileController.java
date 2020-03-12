@@ -28,8 +28,6 @@ public class FileController {
 	private FdfsUtil fdfsUtil;
 	
 	
-	
-	
 	/**
 	 * 单文件上传
 	 * @param file
@@ -66,6 +64,7 @@ public class FileController {
 	
 	/**
 	 * 删除文件
+	 * 请求示例：localhost:8080/file/delete?fileName=/group1/M00/00/00/wKh8gF5pwYqAdKCjAQcu7zYLQWc066.jpg
 	 * @param fileName
 	 * @return
 	 * @throws Exception
@@ -77,7 +76,8 @@ public class FileController {
 	}
 	
 	/**
-	 * 下载文件 ，建议直接nginx 请求 文件地址 ，不必采用本方法
+	 * 请求示例：localhost:8080/file/download?fileName=group1/M00/00/00/wKh8gF5pxOyAXPizAQcu7zYLQWc071.jpg
+	 * 下载文件 ，建议前端获取文件服务器地址+fileName 方式直接访问 ，不必采用本方法
 	 * @param fileName
 	 * @param response
 	 * @throws Exception
@@ -96,7 +96,8 @@ public class FileController {
 	}
 	
 	/**
-	 * 获取文件 服务器地址
+	 * 获取文件服务器地址 
+	 * 返回示例：http://192.168.124.128:8888/
 	 * @return
 	 * @throws Exception
 	 */
