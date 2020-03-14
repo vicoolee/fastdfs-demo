@@ -15,10 +15,10 @@ docker开机启动 systemctl start docker
 docker pull delron/fastdfs    
 
 构建tracker容器
-docker run -d --network=host --name tracker -v /docker/fastdfs/tracker:/var/fdfs delron/fastdfs tracker    
+docker run -d --network=host --restart=always --name tracker -v /docker/fastdfs/tracker:/var/fdfs delron/fastdfs tracker    
 
 构建storage容器，这里需要修改TRACKER_SERVER=192.168.1.56:22122中的IP地址为你的服务器本机对应ip地址
-docker run -d --network=host --name storage -e TRACKER_SERVER=192.168.1.56:22122 -v /docker/fastdfs/storage:/var/fdfs -e GROUP_NAME=group1 delron/fastdfs storage 
+docker run -d --network=host --restart=always --name storage -e TRACKER_SERVER=192.168.1.56:22122 -v /docker/fastdfs/storage:/var/fdfs -e GROUP_NAME=group1 delron/fastdfs storage 
 
 3.开启防护墙端口   需开放端口 22122（tracker端口）和23000（storage端口）和8888（nginx端口）
 
